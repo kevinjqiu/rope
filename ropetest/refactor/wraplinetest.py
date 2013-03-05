@@ -24,8 +24,8 @@ class WrapLineTest(unittest.TestCase):
         self.project.do(changes)
         result = testmod.read()
         self.assertEquals(
-            'from testmod import (foo, bar, quux,\n'
-            '    foo1, bar1, quux)\n'
+            'from testmod import (\n'
+            '    foo, bar, quux, foo1, bar1, quux)\n'
             'def main(): pass',
             result)
 

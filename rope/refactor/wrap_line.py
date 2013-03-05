@@ -34,4 +34,26 @@ class WrapLine(object):
         return changes
 
     def wrap_ImportFrom(self, node, max_width):
-        return ''
+        names = node.names
+        lines = ['from %s import (' % node.module]
+
+        current_line = ' ' * 4  # indent
+
+        while len(names) > 0:
+            name = names.pop(0)
+            segment = name.name
+            if name.asname:
+                segment += ' as %s' % name.asname
+            segment = '%s, ' % segment
+
+            if len(current_line + segment) < max_width:
+                current_line += segment
+            else:
+                names.insert(0, name)
+                current_line = current_line.rsplit(', ', 1)[0] + '\n'
+                lines.append(current_line)
+                current_line = ' ' * 4
+        current_line = current_line.rsplit(', ', 1)[0] + ')'
+        lines.append(current_line)
+
+        return '\n'.join(lines)
