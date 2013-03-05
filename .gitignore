@@ -1,0 +1,6 @@
+*.pyc
+.ropeproject/
+*.egg-info/
+env/
+tags/
+tags
