@@ -8,9 +8,12 @@ class WrapLine(object):
         self.pycore = project.pycore
         self.resource = resource
 
-    def get_changes(self, max_width):
+    def get_changes(self, max_width=None):
+        if max_width is None:
+            max_width = self.project.prefs['indent_size']
+
         pymodule = self.pycore.resource_to_pyobject(self.resource)
-        # right now I'm only wrapping from imports
+
         changes = ChangeSet('Wrap line')
         change_collector = codeanalyze.ChangeCollector(pymodule.source_code)
 
