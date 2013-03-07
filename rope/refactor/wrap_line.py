@@ -1,5 +1,3 @@
-import _ast
-
 from rope.base import codeanalyze
 from rope.base.change import ChangeSet, ChangeContents
 
@@ -28,9 +26,10 @@ class WrapLine(object):
                 end = pymodule.lines.get_line_end(node.lineno)
                 change_collector.add_change(start, end, wrapped)
 
-        changes.add_change(ChangeContents(
-            self.resource, change_collector.get_changed()
-        ))
+        if change_collector.get_changed():
+            changes.add_change(ChangeContents(
+                self.resource, change_collector.get_changed()
+            ))
         return changes
 
     def wrap_ImportFrom(self, node, max_width):
@@ -44,6 +43,9 @@ class WrapLine(object):
             segment = name.name
             if name.asname:
                 segment += ' as %s' % name.asname
+            if len(segment) > max_width \
+                    or (len(current_line.strip()) == 0 and len(current_line + segment + ', ') > max_width):
+                return
             segment = '%s, ' % segment
 
             if len(current_line + segment) < max_width:
