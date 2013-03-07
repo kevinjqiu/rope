@@ -50,8 +50,7 @@ class WrapLine(object):
                 current_line += segment
             else:
                 names.insert(0, name)
-                current_line = current_line.rsplit(', ', 1)[0] + '\n'
-                lines.append(current_line)
+                lines.append(current_line.rstrip())
                 current_line = ' ' * 4
         current_line = current_line.rsplit(', ', 1)[0] + ')'
         lines.append(current_line)

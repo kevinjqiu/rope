@@ -14,7 +14,7 @@ class WrapLineTest(unittest.TestCase):
         testutils.remove_project(self.project)
         super(WrapLineTest, self).tearDown()
 
-    def test_simple_reorganize(self):
+    def test_from_imports(self):
         testmod = testutils.create_module(self.project, 'testmod')
         testmod.write(
             'from testmod import foo, bar, quux, foo1, bar1, quux\n'
@@ -26,6 +26,22 @@ class WrapLineTest(unittest.TestCase):
         self.assertEquals(
             'from testmod import (\n'
             '    foo, bar, quux, foo1, bar1, quux)\n'
+            'def main(): pass',
+            result)
+
+    def test_from_imports_with_alias(self):
+        testmod = testutils.create_module(self.project, 'testmod')
+        testmod.write(
+            'from testmod import foo as foo1, bar, quux, foo2, bar1, quux\n'
+            'def main(): pass'
+        )
+        changes = WrapLine(self.project, testmod).get_changes(40)
+        self.project.do(changes)
+        result = testmod.read()
+        self.assertEquals(
+            'from testmod import (\n'
+            '    foo as foo1, bar, quux, foo2,\n'
+            '    bar1, quux)\n'
             'def main(): pass',
             result)
 
