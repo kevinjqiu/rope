@@ -57,7 +57,7 @@ class WrapLine(object):
             else:
                 names.insert(0, name)
                 lines.append(current_line.rstrip())
-                current_line = ' ' * 4
+                current_line = ' ' * self.indent_size
         current_line = current_line.rsplit(', ', 1)[0] + ')'
         lines.append(current_line)
 
